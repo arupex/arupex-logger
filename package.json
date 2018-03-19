@@ -1,0 +1,27 @@
+{
+  "name": "arupex-logger",
+  "version": "1.0.0",
+  "description": "logger",
+  "main": "logger.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arupex/arupex-logger.git"
+  },
+  "keywords": [
+    "logger",
+    "log",
+    "console",
+    "stdout",
+    "stderr",
+    "debug"
+  ],
+  "author": "dirwin517",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/arupex/arupex-logger/issues"
+  },
+  "homepage": "https://github.com/arupex/arupex-logger#readme"
+}
