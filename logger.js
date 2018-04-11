@@ -6,6 +6,8 @@
 class Logger {
     constructor(loggerName, hooks) {
 
+        hooks = hooks || {};
+
         this.hooks = hooks;
 
         const levels = ['silly', 'verbose', 'debug', 'info', 'warn', 'error', 'critical', 'crucial'];
