@@ -19,6 +19,8 @@ class Logger {
         this.outStream = (hooks.outStream || process.stdout);
         this.errStream = (hooks.errStream || process.stderr);
 
+        this.extendedLogObject = typeof hooks.extendedLogObject === 'function'? hooks.extendedLogObject : data => data;
+        this.extendedLogString = typeof hooks.extendedLogString === 'function'? hooks.extendedLogString : data => data;
         function traceRoute() {
             return new Error('TRACE-ROUTE').stack.split('\n').slice(1).find((v) => (v.indexOf('logger.js') === -1));
         }
@@ -58,12 +60,13 @@ class Logger {
         function shortTrace() {
             let trace = traceRoute();
             let shortRegex = /^(.*)\((?:\/*[\w|\-|\.]+\/)*(\w+.*\:[0-9]*\:[0-9]*)\)/;
-            return (trace.match(shortRegex) || []).slice(1).join(' | ');
+            return (trace.match(shortRegex) || []).slice(1).map(e=>e.trim()).join(' | ');
         }
+
 
         const DEFAULT_DEV_FORMAT = (level, args, pretty) => {
             let ts = new Date().toISOString().substr(11, 8);
-            let string = `${ts} ${loggerName} ${level} ${shortTrace()}`;
+            let string = this.extendedLogString(`${ts} ${loggerName} ${level} ${shortTrace()}`);
 
             for (let x = 0; x < args.length; ++x) {
                 string += ' ' + (typeof args[x] === 'object' ? self.stringify(args[x], pretty) : args[x]);
@@ -75,12 +78,12 @@ class Logger {
         this.devFormat = hooks.devFormat || DEFAULT_DEV_FORMAT;
 
         const DEFAULT_PROD_FORMAT = (level, args, pretty) => {
-            let data = {
+            let data = this.extendedLogObject({
                 timestamp: new Date().toISOString().replace('Z', '+00:00'),
                 logger_name: loggerName,
                 level: level,
                 log_line: traceRoute()
-            };
+            });
             let messages = [];
             for (let i = 0; i < args.length; ++i) {
                 /* jshint ignore:start */
