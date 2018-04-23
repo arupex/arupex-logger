@@ -22,7 +22,7 @@ class Logger {
         this.extendedLogObject = typeof hooks.extendedLogObject === 'function'? hooks.extendedLogObject : data => data;
         this.extendedLogString = typeof hooks.extendedLogString === 'function'? hooks.extendedLogString : data => data;
         function traceRoute() {
-            return new Error('TRACE-ROUTE').stack.split('\n').slice(1).find((v) => (v.indexOf('logger.js') === -1));
+            return (new Error('TRACE-ROUTE').stack.split('\n').slice(1).find((v) => (v.indexOf('logger.js') === -1))).trim();
         }
 
         let messageKey = hooks.messageKey || 'message';
@@ -31,6 +31,11 @@ class Logger {
             if (typeof objectOrArrayOrString === 'object' && !Array.isArray(objectOrArrayOrString)) {
                 let keys = Object.keys(objectOrArrayOrString);
                 let numbChunks = Math.ceil(keys.length / 255);
+
+                if(numbChunks <= 1) {
+                    return [objectOrArrayOrString];
+                }
+
                 let current = {};
                 return keys.reduce((acc, key, i) => {
                     if ((i + 1) % numbChunks === 0) {
@@ -60,7 +65,7 @@ class Logger {
         function shortTrace() {
             let trace = traceRoute();
             let shortRegex = /^(.*)\((?:\/*[\w|\-|\.]+\/)*(\w+.*\:[0-9]*\:[0-9]*)\)/;
-            return (trace.match(shortRegex) || []).slice(1).map(e=>e.trim()).join(' | ');
+            return (trace.match(shortRegex) || []).slice(1).join(' | ');
         }
 
 
@@ -85,14 +90,17 @@ class Logger {
                 log_line: traceRoute()
             });
             let messages = [];
-            for (let i = 0; i < args.length; ++i) {
+            // for (let i = 0; i < args.length; ++i) {
                 /* jshint ignore:start */
-                slicer(args[i]).forEach((slice) => {
+            if(args.length === 1) {
+                args = args[0];
+            }
+                slicer(args).forEach((slice) => {
                     data[messageKey] = slice;
                     messages.push(self.stringify(data, pretty));
                 });
                 /* jshint ignore:end */
-            }
+            // }
 
             return messages;
         };

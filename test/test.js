@@ -21,6 +21,35 @@ describe('logger', function(){
         myLogger.info(crazyArray);
     });
 
+
+    it('quick prod test 2', () => {
+        process.env.NODE_ENV = 'prod';
+
+        let myLogger = new Logger('Prod Logger', {});
+
+        myLogger.info('quick test', {
+            event : 'string',
+            complex : {
+                child : [
+                    {
+                        thing : 1
+                    },
+                    {
+                        thing : 2
+                    }
+                ]
+            },
+            message : 'string'
+        });
+
+        let crazyArray = [];
+        for(let i = 0; i < 512; ++i){
+            crazyArray.push({ x : i});
+        }
+        myLogger.info(crazyArray);
+    });
+
+
     it('quick dev test', () => {
         process.env.NODE_ENV = 'dev';
 
