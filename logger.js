@@ -2,7 +2,7 @@
  * Created by daniel.irwin on 6/6/17.
  */
 
-
+'use strict';
 class Logger {
     constructor(loggerName, hooks) {
 
