@@ -74,4 +74,24 @@ describe('logger', function(){
     });
 
 
+    it('error trace prod', () => {
+        process.env.NODE_ENV = 'prod';
+
+        let myLogger = new Logger('Prod Logger', {});
+
+        myLogger.info('outting a prod error', new Error('this is broke'));
+
+    });
+
+
+    it('error trace dev', () => {
+        process.env.NODE_ENV = 'dev';
+
+        let myLogger = new Logger('Dev Logger', {});
+
+        myLogger.info('outing a dev error', new Error('this is broke'));
+
+    });
+
+
 });

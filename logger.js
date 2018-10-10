@@ -139,6 +139,9 @@ class Logger {
             if (typeof value === 'function') {
                 return '[FUNCTION]';
             }
+            if(value instanceof Error) {
+                return { message : value.message, stack : value.stack };
+            }
             return value;
         }, (pretty || this.prettyFormat) ? 3 : 0);
     }
